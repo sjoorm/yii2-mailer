@@ -1,6 +1,6 @@
 {
   "name": "sjoorm/yii2-mailer",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Yii2 queue-based multi transport mailer",
   "keywords": ["yii2", "extension", "mailer", "mandrill", "mail"],
   "type": "yii2-extension",
