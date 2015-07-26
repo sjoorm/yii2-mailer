@@ -20,7 +20,7 @@
     "php":">=5.4.0",
     "yiisoft/yii2": ">=2.0.4",
     "yiisoft/yii2-swiftmailer": ">=2.0.4",
-    "mandrill/mandrill": "dev-master"
+    "mandrill/mandrill": "1.0.54"
   },
   "autoload": {
     "psr-4": {
