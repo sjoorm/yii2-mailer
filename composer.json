@@ -1,0 +1,30 @@
+{
+  "name": "sjoorm/yii2-mailer",
+  "version": "0.1.0",
+  "description": "Yii2 queue-based multi transport mailer",
+  "keywords": ["yii2", "extension", "mailer", "mandrill", "mail"],
+  "type": "yii2-extension",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/sjoorm/yii2-mailer/issues",
+    "source": "https://github.com/sjoorm/yii2-mailer"
+  },
+  "authors": [
+    {
+      "name": "Alexey Tishchenko",
+      "email": "alexey@atishchenko.com",
+      "homepage": "https://www.atishchenko.com"
+    }
+  ],
+  "require": {
+    "php":">=5.4.0",
+    "yiisoft/yii2": ">=2.0.4",
+    "yiisoft/yii2-swiftmailer": ">=2.0.4",
+    "mandrill/mandrill": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "sjoorm\\yii\\": ""
+    }
+  }
+}
