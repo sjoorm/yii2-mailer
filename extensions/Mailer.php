@@ -40,11 +40,11 @@ class Mailer extends Component implements ViewContextInterface {
      * @event MailEvent an event raised right before send.
      * You may set [[MailEvent::isValid]] to be false to cancel the send.
      */
-    const EVENT_BEFORE_SEND = 'beforeSend';
+    const EVENT_BEFORE_SEND = '\sjoorm\yii\extensions\Mailer_beforeSend';
     /**
      * @event MailEvent an event raised right after send.
      */
-    const EVENT_AFTER_SEND = 'afterSend';
+    const EVENT_AFTER_SEND = '\sjoorm\yii\extensions\Mailer_mailer_afterSend';
 
     /**
      * @var string|boolean HTML layout view name. This is the layout used to render HTML mail body.
@@ -103,7 +103,7 @@ class Mailer extends Component implements ViewContextInterface {
 
         foreach($this->_emailQueue as $email) {
             if(!call_user_func_array([$this, 'send'], $email)) {
-                \Yii::error("Can not send email from the QUEUE [{$email[0]}|{$email[2]}]", 'Email');
+                \Yii::error("Can not send email from the QUEUE [{$email[0]}]", 'Email');
             }
         }
     }
