@@ -114,6 +114,7 @@ class Mailer extends Component implements ViewContextInterface {
      * @param array|string $view in one of following formats:
      * "viewName",['viewName', 'param1'=>$param1, ...]
      * @param array $header
+     * @param array $attachments
      * @param array|string $options
      * @return static self reference
      */
@@ -121,6 +122,7 @@ class Mailer extends Component implements ViewContextInterface {
         $subject,
         $view,
         array $header = [],
+        array $attachments = [],
         array $options = []
     ) {
         $content = [
@@ -168,6 +170,7 @@ class Mailer extends Component implements ViewContextInterface {
             $subject,
             $content,
             $header,
+            $attachments,
             $options
         );
     }
@@ -177,6 +180,7 @@ class Mailer extends Component implements ViewContextInterface {
      * @param string $subject message subject
      * @param array|string $body message HTML/HTML+TEXT body
      * @param array $header
+     * @param array $attachments
      * @param array|string $options
      * @return static self reference
      */
@@ -184,6 +188,7 @@ class Mailer extends Component implements ViewContextInterface {
         $subject,
         $body,
         array $header = [],
+        array $attachments = [],
         array $options = []
     ) {
         $content = [];
@@ -200,6 +205,7 @@ class Mailer extends Component implements ViewContextInterface {
             $subject,
             $content,
             $header,
+            $attachments,
             $options
         );
     }
@@ -209,6 +215,7 @@ class Mailer extends Component implements ViewContextInterface {
      * @param string $subject message subject
      * @param string $html message HTML body
      * @param array $header
+     * @param array $attachments
      * @param array|string $options
      * @return static self reference
      */
@@ -216,12 +223,14 @@ class Mailer extends Component implements ViewContextInterface {
         $subject,
         $html,
         array $header = [],
+        array $attachments = [],
         array $options = []
     ) {
         return $this->handle(
             $subject,
             ['html' => $html],
             $header,
+            $attachments,
             $options
         );
     }
@@ -231,6 +240,7 @@ class Mailer extends Component implements ViewContextInterface {
      * @param string $subject message subject
      * @param string $text message TEXT body
      * @param array $header
+     * @param array $attachments
      * @param array $options
      * @return static self reference
      */
@@ -238,12 +248,14 @@ class Mailer extends Component implements ViewContextInterface {
         $subject,
         $text,
         array $header = [],
+        array $attachments = [],
         array $options = []
     ) {
         return $this->handle(
             $subject,
             ['text' => $text],
             $header,
+            $attachments,
             $options
         );
     }
@@ -253,6 +265,7 @@ class Mailer extends Component implements ViewContextInterface {
      * @param string $subject message subject
      * @param array $content ['text'=>'...', 'html'=>'...'] content values
      * @param array $header
+     * @param array $attachments ['/path/to/file/1', '/path/to/file/2'] OR ['/path/to/file' => ['contentType' => 'text/csv', 'fileName' => 'newName.csv']]
      * @param array $options options be given to the created mailers
      * @return static self reference
      */
@@ -260,6 +273,7 @@ class Mailer extends Component implements ViewContextInterface {
         $subject,
         $content,
         array $header,
+        array $attachments,
         array $options
     ) {
         // prepare headers
@@ -287,6 +301,7 @@ class Mailer extends Component implements ViewContextInterface {
                 $subject,
                 $content,
                 $header,
+                $attachments,
                 $options,
                 $this->_track,
                 $this->_needCopy
@@ -295,7 +310,7 @@ class Mailer extends Component implements ViewContextInterface {
             $this->_needCopy = true;
             $this->_track = true;
         } else {
-            $this->send($subject, $content, $header, $options);
+            $this->send($subject, $content, $header, $attachments, $options);
         }
 
         return $this;
@@ -306,6 +321,7 @@ class Mailer extends Component implements ViewContextInterface {
      * @param string $subject message subject
      * @param array $content ['text'=>'...', 'html'=>'...'] content values
      * @param array $header
+     * @param array $attachments
      * @param array $options options be given to the created mailers
      * @param boolean $needTracking if tracking copy is needed
      * @param boolean $needCopy if body copy is needed
@@ -315,6 +331,7 @@ class Mailer extends Component implements ViewContextInterface {
         $subject,
         $content,
         array $header,
+        array $attachments,
         array $options,
         $needTracking = null,
         $needCopy = null
@@ -334,7 +351,7 @@ class Mailer extends Component implements ViewContextInterface {
             $mailer = \Yii::createObject($object);
             /** @var MailerServiceInterface $mailer */
             $message = $this
-                ->compose($mailer, $content, $subject, $header);
+                ->compose($mailer, $content, $subject, $header, $attachments);
             if (!$this->beforeSend($message)) {
                 break;
             }
@@ -368,6 +385,7 @@ class Mailer extends Component implements ViewContextInterface {
      * @param string $subject
      * @param string $subject
      * @param array $header
+     * @param array $attachments
      *
      * @return MessageCopyInterface
      */
@@ -375,7 +393,8 @@ class Mailer extends Component implements ViewContextInterface {
         $mailer,
         $content,
         $subject,
-        array $header
+        array $header,
+        array $attachments
     ) {
         $message = $mailer->compose()
             ->setReplyTo($header[self::REPLY_TO])
@@ -385,6 +404,16 @@ class Mailer extends Component implements ViewContextInterface {
             ->setBcc($header[self::BCC])
             ->setCharset(\Yii::$app->charset)
             ->setSubject($subject);
+
+        if(!empty($attachments)) {
+            foreach($attachments as $path => $details) {
+                if(is_array($details)) {
+                    $message->attach($path, $details);
+                } elseif(is_string($details)) {
+                    $message->attach($details);
+                }
+            }
+        }
 
         if(is_array($content)) {
             if(isset($content['text'])) {
