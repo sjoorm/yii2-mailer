@@ -88,7 +88,7 @@ class Mailer extends Component implements ViewContextInterface {
         if(\Yii::$app->response->hasProperty('isSent')) {
             \Yii::$app->response->on(Response::EVENT_AFTER_SEND, [$this, 'onProcessQueueHandler']);
         } else {
-            \Yii::$app->response->on(Application::EVENT_AFTER_ACTION, [$this, 'onProcessQueueHandler']);
+            \Yii::$app->on(Application::EVENT_AFTER_ACTION, [$this, 'onProcessQueueHandler']);
         }
     }
 
