@@ -18,10 +18,9 @@
   "minimum-stability": "stable",
   "prefer-stable": true,
   "require": {
-    "php":">=5.4.0",
+    "php":">=7.4.0",
     "yiisoft/yii2": "2.0.*",
-    "yiisoft/yii2-swiftmailer": "2.0.*",
-    "mandrill/mandrill": "1.0.54"
+    "yiisoft/yii2-swiftmailer": "2.1.*"
   },
   "autoload": {
     "psr-4": {
